@@ -1,4 +1,4 @@
-name: CI/CD Docker
+name: CI/CD Docker & Deploy
 
 on:
   push:
@@ -39,3 +39,16 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy-local:
+    needs: build-and-push
+    runs-on: self-hosted  # Utilise votre runner local installé sur le PC
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Pull latest image and restart containers
+        run: |
+          docker compose pull
+          docker compose up -d --build

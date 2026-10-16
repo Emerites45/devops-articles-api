@@ -1,0 +1,32 @@
+
+
+services:
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=articles_db
+      - DB_USER=article
+      - DB_PASSWORD=article
+    depends_on:
+      - postgres
+    restart: always
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: article
+      POSTGRES_PASSWORD: article
+      POSTGRES_DB: articles_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  pgdata:
